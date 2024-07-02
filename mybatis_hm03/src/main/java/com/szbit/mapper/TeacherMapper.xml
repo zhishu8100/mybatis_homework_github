@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szbit.mapper.TeacherMapper">
+    <select id="selectList" resultType="teacher" >
+        select * from teacher
+    </select>
+    <select id="selectAvgSal" parameterType="string" resultType="int">
+        select avg(sal) from teacher where addr like "%"#{addr}"%"
+    </select>
+    <select id="selectId" parameterType="int" resultType="teacher">
+        select * from teacher where id = #{id}
+    </select>
+    <insert id="insert" parameterType="teacher">
+        insert into teacher values (default,name=#{name},addr=#{addr},age=#{age},job=#{job},sal=#{sal})
+    </insert>
+    <update id="update" parameterType="teacher">
+        update teacher set name=#{name},addr=#{addr},age=#{age},job=#{job},sal=#{sal} where id=#{id}
+    </update>
+    <update id="updateJob" parameterType="teacher">
+        update teacher set job='销售经理' where age >#{age} and job = #{job}
+    </update>
+    <delete id="deleteByAge" parameterType="int">
+        delete from teacher where age >= #{age}
+    </delete>
+</mapper>

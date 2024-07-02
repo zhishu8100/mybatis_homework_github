@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szbit.mapper.TeacherMapper">
+    <!--insert-->
+    <insert id="insertBatch" parameterType="teacher" >
+        insert into teacher values
+        <foreach collection="list" item="t" separator=",">
+            (default,#{t.name},#{t.addr},#{t.age},#{t.job},#{t.sal})
+        </foreach>
+    </insert>
+    <!--select-->
+    <sql id="addrSql">
+        <bind name="city" value="'%'+addr+'%'"/>
+        <where>
+            and addr like #{city}
+        </where>
+    </sql>
+    <select id="selectByAddr" parameterType="teacher" resultType="teacher">
+        select * from teacher
+        <include refid="addrSql"></include>
+    </select>
+    <select id="countAvgSal" parameterType="teacher" resultType="int">
+        select avg(sal) from teacher
+        <include refid="addrSql"></include>
+    </select>
+    <!--update-->
+    <update id="updateByAddr" parameterType="teacher">
+        update teacher
+        <set>
+            job = #{job},sal=#{sal}
+        </set>
+        <include refid="addrSql"></include>
+    </update>
+    <!--delete-->
+    <delete id="deleteList">
+        delete from teacher
+        <foreach collection="list" item="id" open="where id in(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
